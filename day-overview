@@ -1,0 +1,38 @@
+#!/bin/sh
+
+DATE=$1
+
+BASEDIR=$(dirname $(realpath $0))
+DIR=${BASEDIR}/${DATE}
+CURR_DATE=$(date +%F)
+
+filename_to_time()
+{
+    value=$1
+    echo -n "${value: -4:2}:${value: -2:2}"
+}
+
+
+get_time_diff()
+{
+    starting_time=$1
+    finishing_time=$2
+
+    starting_ts=$(date -d "${CURR_DATE} ${starting_time}" "+%s")
+    finishing_ts=$(date -d "${CURR_DATE} ${finishing_time}" "+%s")
+
+    diff_seconds=$((finishing_ts - starting_ts))
+
+    echo -n "$(date -d@${diff_seconds} -u +%H:%M)"
+}
+
+last_filename='------'
+for file in ${DIR}/*; do
+    starting_time=$(filename_to_time $last_filename)
+    finishing_time=$(filename_to_time $file)
+
+    diff_time=$(get_time_diff $starting_time $finishing_time)
+
+    echo "${starting_time} - ${finishing_time}    ${diff_time}: $(cat $file)"
+    last_filename=$file
+done

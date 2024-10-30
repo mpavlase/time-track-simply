@@ -1,0 +1,12 @@
+#!/bin/sh
+
+BASEDIR=$(dirname $(realpath $0))
+DIR=${BASEDIR}/$(date +%F)
+mkdir -p $DIR
+
+TS_BEGIN=$(date "+%H:%M")
+echo -n "(${TS_BEGIN}) Just finished activity: "
+read msg
+
+TS=$(date "+%H%M")
+echo $msg >> $DIR/$TS
